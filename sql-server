@@ -31,15 +31,18 @@ dnf install mysql-server -y &>>$Log_file_name
 Validate $? "Installing Mysql" 
 
 systemctl enable mysqld &>>$Log_file_name
-Validate $? "Starting Mysql"
+Validate $? "enabling Mysql"
 
 systemctl start mysqld &>>$Log_file_name
 Validate $? "Starting Mysql"
 
 systemctl status mysqld &>>$Log_file_name
-Validate $? "Starting Mysql"
+Validate $? "Status Mysql"
 
-mysql -h database-server.nithinlearning.site -u root -pExpenseApp@1 -e 'show databases;' &>>$Log_file_name
+mysql_secure_installation --set-root-pass ExpenseApp@1
+validate $?"setting root password"
+
+mysql -h mysql.daws30.online -u root -pExpenseApp@1 -e 'show databases;' &>>$Log_file_name
 
 
 if [ $? -ne 0 ]; then 
