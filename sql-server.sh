@@ -40,7 +40,7 @@ systemctl status mysqld &>>$Log_file_name
 Validate $? "Status Mysql"
 
 mysql_secure_installation --set-root-pass ExpenseApp@1
-validate $?"setting root password"
+validate $? "setting root password"
 
 mysql -h mysql.daws30.online -u root -pExpenseApp@1 -e 'show databases;' &>>$Log_file_name
 
