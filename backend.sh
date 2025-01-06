@@ -25,19 +25,25 @@ Check_root(){
         exit 1
     fi
 }
-echo "Script is running at: $Timestamp" &>>$Log_file_name
+
 
 dnf module disable nodejs -y &>>$Log_file_name
-validate $? "disabling nodejs"
+validate $? "Disabling nodejs"
 
 dnf module enable nodejs:20 -y &>>$Log_file_name
-validate $? "enabling nodejs"
+validate $? "Enabling nodejs"
 
 dnf install nodejs -y &>>$Log_file_name
-validate  $? "installing nodejs"
+validate  $? "Installing nodejs"
 
-useradd expense &>>$Log_file_name
-validate $? "adding expense user"
+id expense &>>$LOG_FILE_NAME
+if [ $? -ne 0 ]
+then
+    useradd expense &>>$LOG_FILE_NAME
+    VALIDATE $? "Adding expense user"
+else
+    echo -e "expense user already exists ... $Y SKIPPING $N"
+fi
 
 mkdir /app &>>$Log_file_name
 validate $? "making directory"
@@ -46,7 +52,7 @@ curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expen
 validate $? "downloading application"
 
 cd /app 
-validate $? "creating app directory"
+rm -rf /app/*
 
 unzip /tmp/backend.zip &>>$Log_file_name
 validate $? "unziping code"
